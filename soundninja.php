@@ -3,7 +3,7 @@
 Plugin Name: Soundninja 
 Plugin URI:  http://soundninja.com/
 Description: The embedded player Spotify wish they made
-Version:     0.1.2
+Version:     0.1.3
 Author:      Web Three
 Author URI:  http://soundninja.com/
 Copyright (C) 2015  Web Three Inc.
