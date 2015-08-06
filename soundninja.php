@@ -51,6 +51,9 @@ add_action('admin_menu', 'admin_ninja_menu');
 function admin_ninja_menu() {
 	global $soundninja_plugin_slug;
 	add_submenu_page('options-general.php', 'Soundninja Settings', 'Soundninja', 'manage_options', $soundninja_plugin_slug, 'soundninja_settings_page');
+
+	wp_register_script('vfb-js-admin', plugins_url('/',__FILE__) . 'soundninja.js', array('jquery') );
+    wp_enqueue_script( 'vfb-js-admin');
 }
 
 // Soundninja Settings page
@@ -92,50 +95,70 @@ function soundninja_settings_page() {
 				<tr valign="top">
 					<th scope="row"><?php _e( 'Select Posts', 'soundninja-plugin' ) ?>:</th>
 					<td>
+					<div style="background: #fff none repeat scroll 0 0; border: 1px solid #ddd; height: 200px;  overflow-y: scroll; width: 400px;">
+					    <p class="search_box" style="margin:0 !important;"><input style="width:382px;"  type="text" id="text_search" placeholder="Enter keyword"><span id="clear_btn" style="color: #999;cursor: pointer;margin-left: -22px;
+    padding: 0 5px;">X</span></p>
 						<?php $selected = get_option('soundninja_show_on_posts'); ?>
-
-						<select multiple style="width:200px;height:300px" name="soundninja_show_on_posts[]" onchange="dropdown_change(this);">
-							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?>  value="all">All posts</option>
+						<p class="rowcheckbox"><input class="ncheckbox" id="checkallpost" ctitle="" name="soundninja_show_on_posts[]" type="checkbox" <?php echo (is_array($selected) && in_array('all',$selected)) ? ' checked="checked" ' : ''; ?>  value="all">All posts</p>
+						<!-- <select multiple style="width:200px;height:300px" name="soundninja_show_on_posts[]" onchange="dropdown_change(this);">
+							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?>  value="all">All posts</option> -->
+						
 						<?php
 							// loading all posts and showing in dropdown
 							query_posts( 'posts_per_page=-1' );
 							while ( have_posts() ) : the_post();
 								$id =  get_the_ID();
-								$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' selected="selected" ' : '';
+								$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' checked="checked" ' : '';
 						?>
-						  		<option value="<?php echo $id ?>" <?php echo $selected_option; ?>><?php the_title(); ?></option>
+						
+						<p class="rowcheckbox"><input class="ncheckbox" type="checkbox"  name="soundninja_show_on_posts[]" value="<?php echo $id ?>" ctitle="<?php the_title(); ?>" <?php echo $selected_option; ?> />
+						<?php the_title(); ?></p>
+						  	<!-- <input type="checkbox" id="show_home" name="soundninja_show_on_home" value="1" <?php echo checked(1, get_option('soundninja_show_on_home'), false); ?> /> -->
+						  	<!-- <option value="<?php echo $id ?>" <?php echo $selected_option; ?>><?php the_title(); ?></option> -->
+							
 						<?php endwhile; ?>
-						</select>
-						<br/><i><?php _e('Press Ctrl to select multiple items', 'soundninja-plugin' ); ?></i>
+						<!-- </select> -->
 
+
+						<!-- <br/><i><?php _e('Press Ctrl to select multiple items', 'soundninja-plugin' ); ?></i> -->
+
+						<p class="cmessage" style="display:none;">Not found yet</p>
 						<?php wp_reset_query(); ?>
+</div>
 					</td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e( 'Select Pages', 'soundninja-plugin' ) ?>:</th>
 					<td>
+					<div style="background: #fff none repeat scroll 0 0; border: 1px solid #ddd; height: 200px;  overflow-y: scroll; width: 400px;">
+						 <p class="search_box" style="margin:0 !important;"><input style="width:382px;"  type="text" id="text_search_page" placeholder="Enter keyword"><span id="clear_btn_page" style="color: #999;cursor: pointer;margin-left: -22px;
+    padding: 0 5px;">X</span></p>
 						<?php $selected = get_option('soundninja_show_on_pages'); ?>
-
-						<select multiple style="width:200px;height:300px" name="soundninja_show_on_pages[]" onchange="dropdown_change(this);">
-							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?> value="all">All pages</option>
+						<p class="rowcheckbox"><input class="ncheckboxpage" id="checkallpage" ctitle="" name="soundninja_show_on_pages[]"  type="checkbox" <?php echo (is_array($selected) && in_array('all',$selected)) ? ' checked="checked" ' : ''; ?>  value="all">All pages</p>
+						<!-- <select multiple style="width:200px;height:300px" name="soundninja_show_on_pages[]" onchange="dropdown_change(this);">
+							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?> value="all">All pages</option> -->
 						<?php
 							// loading all pages and showing in dropdown
 							query_posts( 'posts_per_page=-1&post_type=page' );
 							while ( have_posts() ) : the_post();
 								$id =  get_the_ID();
-								$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' selected="selected" ' : '';
+								$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' checked="checked" ' : '';
 						?>
-						  		<option value="<?php echo $id ?>" <?php echo $selected_option; ?>><?php the_title(); ?></option>
+						  		<!-- <option value="<?php echo $id ?>" <?php echo $selected_option; ?>><?php the_title(); ?></option> -->
+							<p class="rowcheckbox"><input class="ncheckboxpage" type="checkbox" name="soundninja_show_on_pages[]"  value="<?php echo $id ?>" ctitle="<?php the_title(); ?>" <?php echo $selected_option; ?> />
+							<?php the_title(); ?></p>
 						<?php endwhile; ?>
-						</select>
-						<br/><i><?php _e('Press Ctrl to select multiple items', 'soundninja-plugin' ); ?></i>
+						
+						<p class="cmessage-page" style="display:none;">Not found yet</p>
 
 						<?php wp_reset_query(); ?>
+					</div>
 					</td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e( 'Show on home page', 'soundninja-plugin' ) ?>:</th>
 					<td>
+
   						<input type="checkbox" id="show_home" name="soundninja_show_on_home" value="1" <?php echo checked(1, get_option('soundninja_show_on_home'), false); ?> />
   						<label for="show_home"> <?php _e('Run Soundninja on Homepage', 'soundninja-plugin' ); ?></label>
 					</td>

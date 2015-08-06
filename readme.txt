@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The embedded music player Spotify wish they made.
+The Wordpress plug-in Spotify wish they made.
 
 == Description ==
 
@@ -31,6 +31,10 @@ Yes, get in touch with team@soundninja.com to request a Client ID and Access Key
 == Screenshots ==
 
 == Changelog ==
+
+= 0.1.3 =
+* Changed select page list to checkbox list
+* Added search functionality for finding posts
 
 = 0.1.2 =
 * Added a check for Client ID and Access Key
