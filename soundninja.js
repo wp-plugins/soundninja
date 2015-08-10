@@ -97,13 +97,22 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    var checked_all = true;
-    $(".ncheckbox").each(function() {
-        if ($(this).is(':checked') == false) {
-            checked_all = false;
-        }
-    });
-    $('#checkallpost').prop('checked', checked_all);
+
+    var checked_all_post = $('#checkallpost').is(':checked');
+    if(checked_all_post){
+        $(".ncheckbox").each(function() {
+            $(this).prop('checked', true);
+        });
+    }
+
+    //var checked_all = true;
+    // $(".ncheckbox").each(function() {
+    //     if ($(this).is(':checked') == false) {
+    //         checked_all = false;
+    //     }
+    // });
+    //$('#checkallpost').prop('checked', checked_all);
+
     $(".ncheckbox").change(function() {
         var checked_all = true;
         $(".ncheckbox").each(function() {
@@ -126,13 +135,21 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    var checked_all = true;
-    $(".ncheckboxpage").each(function() {
-        if ($(this).is(':checked') == false) {
-            checked_all = false;
-        }
-    });
-    $('#checkallpage').prop('checked', checked_all);
+
+    var checked_all_page = $('#checkallpost').is(':checked');
+    if(checked_all_page){
+        $(".ncheckboxpage").each(function() {
+            $(this).prop('checked', true);
+        });
+    }
+
+    // var checked_all = true;
+    // $(".ncheckboxpage").each(function() {
+    //     if ($(this).is(':checked') == false) {
+    //         checked_all = false;
+    //     }
+    // });
+    // $('#checkallpage').prop('checked', checked_all);
     $(".ncheckboxpage").change(function() {
         var checked_all = true;
         $(".ncheckboxpage").each(function() {

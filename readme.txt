@@ -4,7 +4,7 @@ Donate link: http://soundninja.com
 Tags: audio, music, discovery, tool, advertising
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,9 @@ Yes, get in touch with team@soundninja.com to request a Client ID and Access Key
 == Screenshots ==
 
 == Changelog ==
+
+= 0.1.4 =
+* Fixed bug in selecting all posts in Soundninja settings
 
 = 0.1.3 =
 * Changed select page list to checkbox list

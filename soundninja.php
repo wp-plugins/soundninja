@@ -2,8 +2,8 @@
 /*
 Plugin Name: Soundninja 
 Plugin URI:  http://soundninja.com/
-Description: The embedded player Spotify wish they made
-Version:     0.1.3
+Description: The Wordpress plug-in Spotify wish they made
+Version:     0.1.4
 Author:      Web Three
 Author URI:  http://soundninja.com/
 Copyright (C) 2015  Web Three Inc.
