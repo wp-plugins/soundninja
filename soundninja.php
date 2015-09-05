@@ -3,7 +3,7 @@
 Plugin Name: Soundninja 
 Plugin URI:  http://soundninja.com/
 Description: The Wordpress plug-in Spotify wish they made
-Version:     0.1.4
+Version:     0.1.5
 Author:      Web Three
 Author URI:  http://soundninja.com/
 Copyright (C) 2015  Web Three Inc.
@@ -35,7 +35,7 @@ function soundninja_enqueue($hook) {
     // checking whether page or post
     if(is_page() || is_singular('post')) {
     	$option = ($type=='post') ?  get_option('soundninja_show_on_posts') : get_option('soundninja_show_on_pages');
-      	if(in_array(get_the_ID(),$option) || in_array('all',$option)) {
+      	if(!empty($option) && in_array(get_the_ID(),$option) || !empty($option) && in_array('all',$option)) {
         	soundninja_enqueue_init();
       	}
     }
