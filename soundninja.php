@@ -27,6 +27,12 @@ function soundninja_enqueue_init() {
 	    0, // appends ?ver=$wordpress_version
 	    true // in_footer
 	);
+    
+    add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+    if ( 'soundninja' !== $handle )
+        return $tag;
+    return str_replace( ' src', ' id="soundninja" src', $tag );
+    }, 10, 2 );
 }
 
 function soundninja_enqueue($hook) {
