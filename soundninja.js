@@ -135,13 +135,14 @@ jQuery(document).ready(function($) {
             }
         });
     });
-
-    var checked_all_page = $('#checkallpost').is(':checked');
+	
+    var checked_all_page = $('#checkallpage').is(':checked');
     if(checked_all_page){
         $(".ncheckboxpage").each(function() {
             $(this).prop('checked', true);
         });
     }
+    
 
     // var checked_all = true;
     // $(".ncheckboxpage").each(function() {

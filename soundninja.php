@@ -3,7 +3,7 @@
 Plugin Name: Soundninja 
 Plugin URI:  http://soundninja.com/
 Description: The Wordpress plug-in Spotify wish they made
-Version:     0.1.5
+Version:     0.1.6
 Author:      Web Three
 Author URI:  http://soundninja.com/
 Copyright (C) 2015  Web Three Inc.
@@ -98,7 +98,7 @@ function soundninja_settings_page() {
 					<div style="background: #fff none repeat scroll 0 0; border: 1px solid #ddd; height: 200px;  overflow-y: scroll; width: 400px;">
 					    <p class="search_box" style="margin:0 !important;"><input style="width:382px;"  type="text" id="text_search" placeholder="Enter keyword"><span id="clear_btn" style="color: #999;cursor: pointer;margin-left: -22px;
     padding: 0 5px;">X</span></p>
-						<?php $selected = get_option('soundninja_show_on_posts'); ?>
+						<?php $selected = get_option('soundninja_show_on_posts','no'); ?>
 						<p class="rowcheckbox"><input class="ncheckbox" id="checkallpost" ctitle="" name="soundninja_show_on_posts[]" type="checkbox" <?php echo (is_array($selected) && in_array('all',$selected)) ? ' checked="checked" ' : ''; ?>  value="all">All posts</p>
 						<!-- <select multiple style="width:200px;height:300px" name="soundninja_show_on_posts[]" onchange="dropdown_change(this);">
 							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?>  value="all">All posts</option> -->
@@ -133,7 +133,7 @@ function soundninja_settings_page() {
 					<div style="background: #fff none repeat scroll 0 0; border: 1px solid #ddd; height: 200px;  overflow-y: scroll; width: 400px;">
 						 <p class="search_box" style="margin:0 !important;"><input style="width:382px;"  type="text" id="text_search_page" placeholder="Enter keyword"><span id="clear_btn_page" style="color: #999;cursor: pointer;margin-left: -22px;
     padding: 0 5px;">X</span></p>
-						<?php $selected = get_option('soundninja_show_on_pages'); ?>
+						<?php $selected = get_option('soundninja_show_on_pages','a'); ?>
 						<p class="rowcheckbox"><input class="ncheckboxpage" id="checkallpage" ctitle="" name="soundninja_show_on_pages[]"  type="checkbox" <?php echo (is_array($selected) && in_array('all',$selected)) ? ' checked="checked" ' : ''; ?>  value="all">All pages</p>
 						<!-- <select multiple style="width:200px;height:300px" name="soundninja_show_on_pages[]" onchange="dropdown_change(this);">
 							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?> value="all">All pages</option> -->
