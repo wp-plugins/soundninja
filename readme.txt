@@ -3,8 +3,8 @@ Contributors: rossdyson
 Donate link: http://soundninja.com
 Tags: audio, music, discovery, user engagement, advertising
 Requires at least: 3.0.1
-Tested up to: 4.3
-Stable tag: 0.1.6
+Tested up to: 4.3.1
+Stable tag: 0.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ Yes, get in touch with team@soundninja.com to request a Client ID and Access Key
 == Screenshots ==
 
 == Changelog ==
+
+= 0.1.7 =
+* Modified page selection method to go by categories instead of posts
+* Fixed bug prevent use of Soundninja on mobile devices
 
 = 0.1.6 =
 * Fixed major IE bug

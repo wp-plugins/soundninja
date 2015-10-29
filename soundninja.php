@@ -3,7 +3,7 @@
 Plugin Name: Soundninja 
 Plugin URI:  http://soundninja.com/
 Description: The Wordpress plug-in Spotify wish they made
-Version:     0.1.6
+Version:     0.1.7
 Author:      Web Three
 Author URI:  http://soundninja.com/
 Copyright (C) 2015  Web Three Inc.
@@ -39,8 +39,28 @@ function soundninja_enqueue($hook) {
     $type = get_post_type();
 
     // checking whether page or post
-    if(is_page() || is_singular('post')) {
-    	$option = ($type=='post') ?  get_option('soundninja_show_on_posts') : get_option('soundninja_show_on_pages');
+    //
+    // Sergey aka Takereal. 2015-10-20 update. By categories.
+    //
+    if (is_singular('post') && $type=='post')  {
+
+      $option = get_option('soundninja_show_on_categories');
+
+      if(!empty($option)) {
+
+        foreach(wp_get_post_categories(get_the_ID()) as $category_id) {
+
+          if(in_array($category_id, $option)) {
+
+            soundninja_enqueue_init();
+            break;
+          }
+        }
+      }
+
+    }
+    elseif(is_page()) {
+    	$option = get_option('soundninja_show_on_pages');
       	if(!empty($option) && in_array(get_the_ID(),$option) || !empty($option) && in_array('all',$option)) {
         	soundninja_enqueue_init();
       	}
@@ -57,124 +77,123 @@ add_action('admin_menu', 'admin_ninja_menu');
 function admin_ninja_menu() {
 	global $soundninja_plugin_slug;
 	add_submenu_page('options-general.php', 'Soundninja Settings', 'Soundninja', 'manage_options', $soundninja_plugin_slug, 'soundninja_settings_page');
-
-	wp_register_script('vfb-js-admin', plugins_url('/',__FILE__) . 'soundninja.js', array('jquery') );
-    wp_enqueue_script( 'vfb-js-admin');
 }
 
 // Soundninja Settings page
 function soundninja_settings_page() {
 ?>
-	<!-- select all options of dropdown -->
-	<script type="text/javascript">
-	function dropdown_change( obj ) {
-		var isAllSelected = jQuery(obj).find("option:first-child").prop('selected');
-		if (isAllSelected)
-			jQuery(obj).find("option:not(:first-child)").prop('selected', false);
-		else
-			jQuery(obj).find("option:first-child").prop('selected', false);
-	}
-	</script>
-	<div class="wrap">
-		<h2>Soundninja Settings</h2>
-		<form method="post" action="options.php" id="soundninja_options">
-      		<?php settings_fields( 'soundninja-settings-group' ); ?>
-      		<?php do_settings_sections( 'soundninja-settings-group' ); ?>
+    <!-- select all options of dropdown -->
+    <script type="text/javascript">
+        function dropdown_change(obj) {
+            var isAllSelected = jQuery(obj).find("option:first-child").prop('selected');
+            if (isAllSelected)
+                jQuery(obj).find("option:not(:first-child)").prop('selected', false);
+            else
+                jQuery(obj).find("option:first-child").prop('selected', false);
+        }
+    </script>
+    <div class="wrap">
+        <h2>Soundninja Settings</h2>
+        <form method="post" action="options.php" id="soundninja_options">
+            <?php settings_fields( 'soundninja-settings-group' ); ?>
+                <?php do_settings_sections( 'soundninja-settings-group' ); ?>
 
-			  <table class="form-table">
-				<tr valign="top">
-				  <th scope="row"><?php _e( 'Site ID', 'soundninja-plugin' ) ?>:</th>
-				  <td>
-				  <textarea name="soundninja_client_id" cols="85" rows="1"><?php echo esc_attr( get_option('soundninja_client_id') ); ?></textarea>
-				  </td>
-				</tr>
+                    <table class="form-table">
+                        <tr valign="top">
+                            <th scope="row">
+                                <?php _e( 'Site ID', 'soundninja-plugin' ) ?>:</th>
+                            <td>
+                                <textarea name="soundninja_client_id" cols="85" rows="1">
+                                    <?php echo esc_attr( get_option('soundninja_client_id') ); ?>
+                                </textarea>
+                            </td>
+                        </tr>
 
-				<tr valign="top">
-				  <th scope="row"><?php _e( 'Access Token', 'soundninja-plugin' ) ?>:</th>
-				  <td>
-					<textarea name="soundninja_access_token" cols="85" rows="2"><?php echo esc_attr( get_option('soundninja_access_token') ); ?></textarea>
-				  </td>
-				</tr>
-				<tr>
-				  <td colspan="2"><p>Select the posts and pages to run Soundninja on</p></td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><?php _e( 'Select Posts', 'soundninja-plugin' ) ?>:</th>
-					<td>
-					<div style="background: #fff none repeat scroll 0 0; border: 1px solid #ddd; height: 200px;  overflow-y: scroll; width: 400px;">
-					    <p class="search_box" style="margin:0 !important;"><input style="width:382px;"  type="text" id="text_search" placeholder="Enter keyword"><span id="clear_btn" style="color: #999;cursor: pointer;margin-left: -22px;
-    padding: 0 5px;">X</span></p>
-						<?php $selected = get_option('soundninja_show_on_posts','no'); ?>
-						<p class="rowcheckbox"><input class="ncheckbox" id="checkallpost" ctitle="" name="soundninja_show_on_posts[]" type="checkbox" <?php echo (is_array($selected) && in_array('all',$selected)) ? ' checked="checked" ' : ''; ?>  value="all">All posts</p>
-						<!-- <select multiple style="width:200px;height:300px" name="soundninja_show_on_posts[]" onchange="dropdown_change(this);">
-							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?>  value="all">All posts</option> -->
-						
-						<?php
-							// loading all posts and showing in dropdown
-							query_posts( 'posts_per_page=-1' );
-							while ( have_posts() ) : the_post();
-								$id =  get_the_ID();
-								$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' checked="checked" ' : '';
+                        <tr valign="top">
+                            <th scope="row">
+                                <?php _e( 'Access Token', 'soundninja-plugin' ) ?>:</th>
+                            <td>
+                                <textarea name="soundninja_access_token" cols="85" rows="2">
+                                    <?php echo esc_attr( get_option('soundninja_access_token') ); ?>
+                                </textarea>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <?php
+
+//
+// Sergey aka Takereal update begins here.
+//
+?>
+                                <th scope="row">
+                                    <?php _e( 'Categories', 'soundninja-plugin' ) ?>:</th>
+                                <td>
+                                    <?php _e( 'Choose which post categories to use Soundninja on:' ); ?>
+                                        <br/>
+                                        <ul style="list-style: none;">
+                                            <?php $selected = get_option('soundninja_show_on_categories','no'); ?>
+                                                <?php
+						$categories = get_categories(array('orderby' => 'name', 'parent' => 0));
+						foreach ($categories as $category) {
+							// loading all categories and showing in dropdown
+							$id = $category->cat_ID;
+							$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' checked="checked" ' : '';
 						?>
-						
-						<p class="rowcheckbox"><input class="ncheckbox" type="checkbox"  name="soundninja_show_on_posts[]" value="<?php echo $id ?>" ctitle="<?php the_title(); ?>" <?php echo $selected_option; ?> />
-						<?php the_title(); ?></p>
-						  	<!-- <input type="checkbox" id="show_home" name="soundninja_show_on_home" value="1" <?php echo checked(1, get_option('soundninja_show_on_home'), false); ?> /> -->
-						  	<!-- <option value="<?php echo $id ?>" <?php echo $selected_option; ?>><?php the_title(); ?></option> -->
-							
-						<?php endwhile; ?>
-						<!-- </select> -->
 
+                                                    <li style="width: auto; float: left; margin-right: 15px;">
+                                                        <input class="ncheckbox" type="checkbox" name="soundninja_show_on_categories[]" value="<?php echo $id; ?>" ctitle="<?php echo $category->category_nicename; ?>" <?php echo $selected_option; ?> />
+                                                        <?php echo $category->category_nicename; ?>
+                                                    </li>
 
-						<!-- <br/><i><?php _e('Press Ctrl to select multiple items', 'soundninja-plugin' ); ?></i> -->
+                                                    <?php } ?>
+                                        </ul>
+                                </td>
+                        </tr>
 
-						<p class="cmessage" style="display:none;">Not found yet</p>
-						<?php wp_reset_query(); ?>
-</div>
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><?php _e( 'Select Pages', 'soundninja-plugin' ) ?>:</th>
-					<td>
-					<div style="background: #fff none repeat scroll 0 0; border: 1px solid #ddd; height: 200px;  overflow-y: scroll; width: 400px;">
-						 <p class="search_box" style="margin:0 !important;"><input style="width:382px;"  type="text" id="text_search_page" placeholder="Enter keyword"><span id="clear_btn_page" style="color: #999;cursor: pointer;margin-left: -22px;
-    padding: 0 5px;">X</span></p>
-						<?php $selected = get_option('soundninja_show_on_pages','a'); ?>
-						<p class="rowcheckbox"><input class="ncheckboxpage" id="checkallpage" ctitle="" name="soundninja_show_on_pages[]"  type="checkbox" <?php echo (is_array($selected) && in_array('all',$selected)) ? ' checked="checked" ' : ''; ?>  value="all">All pages</p>
-						<!-- <select multiple style="width:200px;height:300px" name="soundninja_show_on_pages[]" onchange="dropdown_change(this);">
-							<option <?php echo (is_array($selected) && in_array('all',$selected)) ? ' selected="selected" ' : ''; ?> value="all">All pages</option> -->
-						<?php
+                        <tr valign="top">
+                            <th scope="row">
+                                <?php _e( 'Pages', 'soundninja-plugin' ) ?>:</th>
+                            <td>
+                                <?php _e( 'Choose which pages to use Soundninja on:' ); ?>
+                                    <br/>
+                                    <ul style="list-style: none;">
+                                        <?php $selected = get_option('soundninja_show_on_pages','a'); ?>
+                                            <?php
 							// loading all pages and showing in dropdown
-							query_posts( 'posts_per_page=-1&post_type=page' );
+							query_posts( 'posts_per_page=-1&post_type=page&orderby=title&order=ASC' );
 							while ( have_posts() ) : the_post();
 								$id =  get_the_ID();
 								$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' checked="checked" ' : '';
 						?>
-						  		<!-- <option value="<?php echo $id ?>" <?php echo $selected_option; ?>><?php the_title(); ?></option> -->
-							<p class="rowcheckbox"><input class="ncheckboxpage" type="checkbox" name="soundninja_show_on_pages[]"  value="<?php echo $id ?>" ctitle="<?php the_title(); ?>" <?php echo $selected_option; ?> />
-							<?php the_title(); ?></p>
-						<?php endwhile; ?>
-						
-						<p class="cmessage-page" style="display:none;">Not found yet</p>
+                                                <li style="width: auto; float: left; margin-right: 15px;">
+                                                    <input class="ncheckboxpage" type="checkbox" name="soundninja_show_on_pages[]" value="<?php echo $id ?>" ctitle="<?php the_title(); ?>" <?php echo $selected_option; ?> />
+                                                    <?php the_title(); ?>
+                                                </li>
+                                                <?php endwhile; ?>
 
-						<?php wp_reset_query(); ?>
-					</div>
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><?php _e( 'Show on home page', 'soundninja-plugin' ) ?>:</th>
-					<td>
+                                                    <?php wp_reset_query(); ?>
+                                    </ul>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">
+                                <?php _e( 'Show on home page', 'soundninja-plugin' ) ?>:</th>
+                            <td>
 
-  						<input type="checkbox" id="show_home" name="soundninja_show_on_home" value="1" <?php echo checked(1, get_option('soundninja_show_on_home'), false); ?> />
-  						<label for="show_home"> <?php _e('Run Soundninja on Homepage', 'soundninja-plugin' ); ?></label>
-					</td>
-				</tr>
-			  </table>
-			  <p class="submit"><input type="submit" value="Save Changes" class="button button-primary" id="submit" name="submit"></p>
-		</form>
-	</div>
+                                <input type="checkbox" id="show_home" name="soundninja_show_on_home" value="1" <?php echo checked(1, get_option( 'soundninja_show_on_home'), false); ?> />
+                                <label for="show_home">
+                                    <?php _e('Run Soundninja on Homepage', 'soundninja-plugin' ); ?>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    <p class="submit">
+                        <input type="submit" value="Save Changes" class="button button-primary" id="submit" name="submit">
+                    </p>
+        </form>
+    </div>
 
-<?php
+    <?php
 }
 
 
@@ -184,7 +203,7 @@ function register_ninja() {
 
 	register_setting('soundninja-settings-group', 'soundninja_client_id');
 	register_setting('soundninja-settings-group', 'soundninja_access_token');
-    register_setting('soundninja-settings-group', 'soundninja_show_on_posts');
+register_setting('soundninja-settings-group', 'soundninja_show_on_categories');	// Sergey aka Takereal 2015-10-20
     register_setting('soundninja-settings-group', 'soundninja_show_on_pages');
   	register_setting('soundninja-settings-group', 'soundninja_show_on_home');
 }
