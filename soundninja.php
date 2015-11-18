@@ -3,7 +3,7 @@
 Plugin Name: Soundninja 
 Plugin URI:  http://soundninja.com/
 Description: The Wordpress plug-in Spotify wish they made
-Version:     0.1.7
+Version:     0.1.8
 Author:      Web Three
 Author URI:  http://soundninja.com/
 Copyright (C) 2015  Web Three Inc.
@@ -22,7 +22,7 @@ function soundninja_enqueue_init() {
 	);
 
 	wp_enqueue_script('soundninja', // id
-	    'http://soundninja.github.io/demos/build/Soundninja.min.js', // path
+	    'http://soundninja-274b.kxcdn.com/live/Soundninja.min.js', // path
 	    array('jquery'), // dependencies
 	    0, // appends ?ver=$wordpress_version
 	    true // in_footer
@@ -103,9 +103,10 @@ function soundninja_settings_page() {
                             <th scope="row">
                                 <?php _e( 'Site ID', 'soundninja-plugin' ) ?>:</th>
                             <td>
-                                <textarea name="soundninja_client_id" cols="85" rows="1">
-                                    <?php echo esc_attr( get_option('soundninja_client_id') ); ?>
-                                </textarea>
+                                <input type="text" name="soundninja_client_id" style="width:626px;padding:2px 10px;" 
+					value="<?php echo esc_attr( get_option('soundninja_client_id') ); ?>">
+                                    
+                                
                             </td>
                         </tr>
 
@@ -113,9 +114,10 @@ function soundninja_settings_page() {
                             <th scope="row">
                                 <?php _e( 'Access Token', 'soundninja-plugin' ) ?>:</th>
                             <td>
-                                <textarea name="soundninja_access_token" cols="85" rows="2">
-                                    <?php echo esc_attr( get_option('soundninja_access_token') ); ?>
-                                </textarea>
+				
+                                <input type="text"name="soundninja_access_token" style="width:626px; padding:2px 10px;"
+					value="<?php echo esc_attr( get_option('soundninja_access_token') ); ?>">
+                                    
                             </td>
                         </tr>
                         <tr valign="top">
@@ -128,19 +130,31 @@ function soundninja_settings_page() {
                                 <th scope="row">
                                     <?php _e( 'Categories', 'soundninja-plugin' ) ?>:</th>
                                 <td>
-                                    <?php _e( 'Choose which post categories to use Soundninja on:' ); ?>
+                                    <?php _e( '<i>Choose which post categories to use Soundninja on:</i>' ); ?>
                                         <br/>
                                         <ul style="list-style: none;">
                                             <?php $selected = get_option('soundninja_show_on_categories','no'); ?>
                                                 <?php
-						$categories = get_categories(array('orderby' => 'name', 'parent' => 0));
+						$args = array(
+	'type'                     => 'post',
+	'child_of'                 => 0,
+	'parent'                   => '',
+	'orderby'                  => 'term_group',
+	'order'                    => 'ASC',
+	'hide_empty'               => 0,
+	'hierarchical'             => 1,
+	'exclude'                  => '',
+	'include'                  => '',
+	'number'                   => '',
+	'taxonomy'                 => 'category',
+	'pad_counts'               => false );
+						$categories = get_categories($args);
 						foreach ($categories as $category) {
 							// loading all categories and showing in dropdown
 							$id = $category->cat_ID;
 							$selected_option  = (is_array($selected) && in_array($id,$selected)) ? ' checked="checked" ' : '';
 						?>
-
-                                                    <li style="width: auto; float: left; margin-right: 15px;">
+		           <li style="width: auto; float: left; margin-right: 15px;">
                                                         <input class="ncheckbox" type="checkbox" name="soundninja_show_on_categories[]" value="<?php echo $id; ?>" ctitle="<?php echo $category->category_nicename; ?>" <?php echo $selected_option; ?> />
                                                         <?php echo $category->category_nicename; ?>
                                                     </li>
@@ -154,7 +168,7 @@ function soundninja_settings_page() {
                             <th scope="row">
                                 <?php _e( 'Pages', 'soundninja-plugin' ) ?>:</th>
                             <td>
-                                <?php _e( 'Choose which pages to use Soundninja on:' ); ?>
+                                <?php _e( '<i>Choose which pages to use Soundninja on:</i>' ); ?>
                                     <br/>
                                     <ul style="list-style: none;">
                                         <?php $selected = get_option('soundninja_show_on_pages','a'); ?>

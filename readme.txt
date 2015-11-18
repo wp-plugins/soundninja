@@ -4,7 +4,7 @@ Donate link: http://soundninja.com
 Tags: audio, music, discovery, user engagement, advertising
 Requires at least: 3.0.1
 Tested up to: 4.3.1
-Stable tag: 0.1.7
+Stable tag: 0.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,17 +12,17 @@ The Wordpress plug-in Spotify wish they made.
 
 == Description ==
 
-This is the Wordpress plugin for integrate the Soundninja song previews and concert listings into your Wordpress powered site.
+Soundninja is the easiest way to integrate Spotify song previews on your website. It integrates seamlessly with your content and allows readers to preview tracks without leaving the page.
 
-You need to be a registered Soundninja user to use this service. Registration is free.
+You can download and use Soundninja on your site for free, however for our automatic artist detection to work properly you need to register through [Soundninja.com](https://www.soundninja.com). Registration is [free](https://www.soundninja.com).
 
 == Installation ==
 
-If installing manually:
-
-1. Create a new folder in your `/wp-content/plugins/` directory named 'soundninja' and upload `soundninja.php` and 'soundninja.js' to  it
+1. Search for Soundninja under "Admin" → "Plugins" → "Add New" or upload the contents of the Soundninja plugin to the `/wp-content/plugins/` directory in a folder called `Soundninja`
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Set posts and pages to run Soundninja on from 'Settings' > 'Soundninja'
+3. Register on our website at [www.soundninja.com](https://www.soundninja.com)
+4. Copy and paste your **Site ID** and **Access Token** into the plugin options in Wordpress, under "Settings" → "Soundninja"
+5. Follow our guides to manage and set up Soundninja on your site
 
 == Frequently Asked Questions == 
 
@@ -30,9 +30,29 @@ If installing manually:
 
 Yes, get in touch with team@soundninja.com to request a Client ID and Access Key.
 
+= What Is Soundninja? =
+
+Soundninja is an in-context music discovery tool; we automatically detect artist names within your web page content and give your readers an easy way to preview those artists’ songs without having to leave your page.
+
+= Does Soundninja affect my website’s performance? =
+
+No. Soundninja is very lightweight, the JavaScript is around 90kb in size and is super fast to download on an average connection. Our JavaScript loads asynchronously, which means it doesn’t block the other elements of your page from loading. When Soundninja has downloaded we analyse your page in the background after the content has finished loading.
+
+= Why are some artists not automatically recognized? =
+
+We use advanced text processing algorithms to identify artist names. The technology is still in beta and undergoing improvements, but if an artist is not automatically recognized you can utilize the Soundninja admin panel to manually add the artist.
+
+= Which browsers does Soundninja support? =
+
+We support all popular browsers across both desktop and mobile! :D
+
 == Screenshots ==
 
 == Changelog ==
+
+= 0.1.8 =
+* Enabled sub-categories to be selected inside Soundninja settings
+* Fixed 'James' bug
 
 = 0.1.7 =
 * Modified page selection method to go by categories instead of posts
